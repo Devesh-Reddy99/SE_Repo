@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { searchSlots } from '../services/slotService';
 import './SearchSlots.css';
 
