@@ -1,0 +1,207 @@
+// backend/tests/rbac.test.js
+const request = require('supertest');
+const app = require('../app');
+
+describe('Role-Based Access Control (RBAC) Tests', () => {
+  let studentToken;
+  let tutorToken;
+  let adminToken;
+
+  // Helper function to get token
+  async function getToken(username, password) {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({
+        grant_type: 'password',
+        username,
+        password
+      });
+    return res.body.access_token;
+  }
+
+  beforeAll(async () => {
+    // Get tokens for all three roles
+    studentToken = await getToken('teststudent@pesu.pes.edu', 'password123');
+    tutorToken = await getToken('testtutor@pesu.pes.edu', 'password123');
+    adminToken = await getToken('testadmin@pesu.pes.edu', 'password123');
+  });
+
+  describe('Student Role Access', () => {
+    test('should allow student to view available slots (public)', async () => {
+      const res = await request(app)
+        .get('/api/slots/available')
+        .set('Authorization', `Bearer ${studentToken}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('slots');
+    });
+
+    test('should allow student to book slots', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', `Bearer ${studentToken}`)
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toContain('booked');
+    });
+
+    test('should deny student access to create slots (tutor only)', async () => {
+      const res = await request(app)
+        .post('/api/slots/create')
+        .set('Authorization', `Bearer ${studentToken}`)
+        .send({ time: '2025-11-03 10:00', subject: 'Math' });
+      
+      expect(res.statusCode).toBe(403);
+      expect(res.body.error).toBe('forbidden');
+    });
+
+    test('should deny student access to admin routes', async () => {
+      const res = await request(app)
+        .get('/api/admin/users')
+        .set('Authorization', `Bearer ${studentToken}`);
+      
+      expect(res.statusCode).toBe(403);
+      expect(res.body.error).toBe('forbidden');
+    });
+  });
+
+  describe('Tutor Role Access', () => {
+    test('should allow tutor to view available slots', async () => {
+      const res = await request(app)
+        .get('/api/slots/available')
+        .set('Authorization', `Bearer ${tutorToken}`);
+      
+      expect(res.statusCode).toBe(200);
+    });
+
+    test('should allow tutor to create slots', async () => {
+      const res = await request(app)
+        .post('/api/slots/create')
+        .set('Authorization', `Bearer ${tutorToken}`)
+        .send({ time: '2025-11-03 15:00', subject: 'Physics' });
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toContain('created');
+    });
+
+    test('should allow tutor to edit slots', async () => {
+      const res = await request(app)
+        .put('/api/slots/edit/1')
+        .set('Authorization', `Bearer ${tutorToken}`)
+        .send({ time: '2025-11-03 16:00', subject: 'Chemistry' });
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toContain('updated');
+    });
+
+    test('should deny tutor access to book slots (student only)', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', `Bearer ${tutorToken}`)
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(403);
+      expect(res.body.error).toBe('forbidden');
+    });
+
+    test('should deny tutor access to admin routes', async () => {
+      const res = await request(app)
+        .get('/api/admin/users')
+        .set('Authorization', `Bearer ${tutorToken}`);
+      
+      expect(res.statusCode).toBe(403);
+    });
+  });
+
+  describe('Admin Role Access', () => {
+    test('should allow admin to view all users', async () => {
+      const res = await request(app)
+        .get('/api/admin/users')
+        .set('Authorization', `Bearer ${adminToken}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('users');
+    });
+
+    test('should allow admin to view all bookings', async () => {
+      const res = await request(app)
+        .get('/api/admin/bookings')
+        .set('Authorization', `Bearer ${adminToken}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('bookings');
+    });
+
+    test('should allow admin to view user profile', async () => {
+      const res = await request(app)
+        .get('/api/admin/users/1')
+        .set('Authorization', `Bearer ${adminToken}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('user');
+    });
+
+    test('should allow admin to access public routes', async () => {
+      const res = await request(app)
+        .get('/api/slots/available')
+        .set('Authorization', `Bearer ${adminToken}`);
+      
+      expect(res.statusCode).toBe(200);
+    });
+  });
+
+  describe('Unauthenticated Access', () => {
+    test('should deny access without token', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(401);
+      expect(res.body.error).toBe('unauthorized');
+    });
+
+    test('should deny access with invalid token', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', 'Bearer invalid_token')
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(401);
+      expect(res.body.error).toBe('unauthorized');
+    });
+
+    test('should deny access with expired token', async () => {
+      // Note: This test would require creating an expired token
+      // For now, we test the error message format
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', 'Bearer expired_token_here')
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(401);
+    });
+  });
+
+  describe('Token Format Validation', () => {
+    test('should reject request without Bearer prefix', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', studentToken)
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(401);
+      expect(res.body.error_description).toContain('Bearer');
+    });
+
+    test('should reject request with empty authorization header', async () => {
+      const res = await request(app)
+        .post('/api/slots/book')
+        .set('Authorization', '')
+        .send({ slotId: 1 });
+      
+      expect(res.statusCode).toBe(401);
+    });
+  });
+});
+

@@ -1,0 +1,71 @@
+// backend/tests/auth.test.js
+const request = require('supertest');
+const app = require('../app');
+
+describe('OAuth2 token endpoint', () => {
+  test('returns access_token for valid credentials', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ grant_type: 'password', username: 'teststudent@pesu.pes.edu', password: 'password123' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('access_token');
+    expect(res.body).toHaveProperty('expires_in');
+    expect(res.body.user.username).toBe('teststudent@pesu.pes.edu');
+  });
+
+  test('returns 401 for invalid credentials', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ grant_type: 'password', username: 'teststudent@pesu.pes.edu', password: 'wrongpass' });
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toHaveProperty('error');
+  });
+});
+
+test('rejects login for non-PESU email', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({
+        grant_type: 'password',
+        username: 'someone@gmail.com',
+        password: 'password123'
+      });
+  
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error_description).toMatch(/pesu\.pes\.edu/);
+  });
+
+  test('rejects missing grant_type', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ username: 'teststudent@pesu.pes.edu', password: 'password123' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error_description).toMatch(/password grant/i);
+  });
+  
+  test('rejects missing password', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ grant_type: 'password', username: 'teststudent@pesu.pes.edu' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error_description).toMatch(/password/i);
+  });
+  
+  test('rejects non-PESU email', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ grant_type: 'password', username: 'abc@gmail.com', password: 'pass' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error_description).toMatch(/pesu\.pes\.edu/);
+  });
+  
+  test('returns token for valid credentials', async () => {
+    const res = await request(app)
+      .post('/api/auth/token')
+      .send({ grant_type: 'password', username: 'teststudent@pesu.pes.edu', password: 'password123' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('access_token');
+  });
+    

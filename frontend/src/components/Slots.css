@@ -1,0 +1,216 @@
+/* Shared styles for slot forms (create/edit) */
+.slot-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #ffffff; /* solid white page background to hide wooden image */
+  padding: 20px;
+}
+
+.slot-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  margin: 24px auto;
+  animation: slideIn 0.4s ease-out;
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.slot-header h3 {
+  font-size: 24px;
+  color: #1a202c;
+  margin: 0;
+  font-weight: 500;
+}
+
+.slot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slot-input-group {
+  margin: 0;
+  position: relative;
+}
+
+.slot-input-group label {
+  display: block;
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 4px;
+}
+
+.slot-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #f8fafc;
+}
+
+.slot-input:focus {
+  border-color: #38a169;
+  box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.1);
+  background: white;
+}
+
+.slot-input::placeholder {
+  color: #a0aec0;
+}
+
+textarea.slot-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.slot-button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.slot-button {
+  padding: 12px 24px;
+  background: #38a169;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(56, 161, 105, 0.1);
+}
+
+.slot-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.2);
+  background: #2f855a;
+}
+
+.slot-button:active {
+  transform: translateY(0);
+  background: #276749;
+}
+
+.slot-button.secondary {
+  background: #718096;
+}
+
+.slot-button.secondary:hover {
+  background: #4a5568;
+}
+
+.slot-message {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+  background: #edf2f7;
+  color: #2d3748;
+  border-left: 4px solid #38a169;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Slot list styling */
+.slot-list {
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.slot-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.slot-list-header h4 {
+  font-size: 20px;
+  color: #1a202c;
+  margin: 0;
+  font-weight: 500;
+}
+
+.slot-item {
+  background: white;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.slot-item-content h5 {
+  font-size: 16px;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.slot-item-content p {
+  color: #718096;
+  margin: 0;
+  font-size: 14px;
+}
+
+.slot-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .slot-card {
+    padding: 24px;
+  }
+  
+  .slot-button {
+    padding: 10px 20px;
+  }
+}
