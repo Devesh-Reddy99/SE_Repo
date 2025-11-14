@@ -55,7 +55,7 @@ describe('EditSlot Component', () => {
 
   test('calls onDone when cancel button is clicked', async () => {
     render(<EditSlot slotId={1} onDone={onDone} />);
-    
+
     // Wait for loading
     const cancelButton = await screen.findByRole('button', { name: /Cancel/i });
 
@@ -70,7 +70,7 @@ describe('EditSlot Component', () => {
 
   test('shows loading state initially', () => {
     render(<EditSlot slotId={1} onDone={onDone} />);
-    
+
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
@@ -81,9 +81,9 @@ describe('EditSlot Component', () => {
         data: { error_description: 'Database connection failed' }
       }
     });
-    
+
     render(<EditSlot slotId={1} onDone={onDone} />);
-    
+
     await waitFor(() => {
       // Component shows "Slot not found" for any error
       expect(screen.getByText('Slot not found')).toBeInTheDocument();

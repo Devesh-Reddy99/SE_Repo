@@ -44,7 +44,7 @@ export async function getSlots(queryParams = {}) {
 export async function searchSlots(query) {
   const token = localStorage.getItem('access_token');
   const url = `${API_BASE}/api/slots/search`;
-  
+
   try {
     const res = await axios.get(url, {
       params: query,

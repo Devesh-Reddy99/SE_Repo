@@ -62,11 +62,11 @@ function setupTestDatabase() {
         });
 
         // Create indexes
-        db.run(`CREATE INDEX IF NOT EXISTS idx_slots_subject ON slots(subject)`, () => {});
-        db.run(`CREATE INDEX IF NOT EXISTS idx_slots_status ON slots(status)`, () => {});
-        db.run(`CREATE INDEX IF NOT EXISTS idx_slots_start_time ON slots(start_time)`, () => {});
-        db.run(`CREATE INDEX IF NOT EXISTS idx_slots_tutor_id ON slots(tutor_id)`, () => {});
-        db.run(`CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)`, () => {});
+        db.run('CREATE INDEX IF NOT EXISTS idx_slots_subject ON slots(subject)', () => {});
+        db.run('CREATE INDEX IF NOT EXISTS idx_slots_status ON slots(status)', () => {});
+        db.run('CREATE INDEX IF NOT EXISTS idx_slots_start_time ON slots(start_time)', () => {});
+        db.run('CREATE INDEX IF NOT EXISTS idx_slots_tutor_id ON slots(tutor_id)', () => {});
+        db.run('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)', () => {});
 
         // Insert test data
         const hashPassword = async () => {

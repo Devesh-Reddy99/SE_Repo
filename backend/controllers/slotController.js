@@ -82,7 +82,7 @@ exports.updateSlot = async (req, res) => {
 exports.searchSlots = async (req, res) => {
   try {
     const { searchTerm = '', filterType = 'all', date = '', subject = '' } = req.query;
-    
+
     // Determine filter value based on filter type
     let filterValue = '';
     if (filterType === 'date') {
@@ -92,11 +92,11 @@ exports.searchSlots = async (req, res) => {
     }
 
     const rows = await db.searchSlots(searchTerm, filterType, filterValue);
-    
+
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'not_found', error_description: 'No slots found matching your criteria' });
     }
-    
+
     return res.json(rows);
   } catch (err) {
     console.error('searchSlots error', err);
@@ -118,7 +118,7 @@ exports.getTutorSlots = async (req, res) => {
   try {
     const userId = req.user?.sub;
     if (!userId) return res.status(401).json({ error: 'unauthorized' });
-    
+
     const rows = await db.getTutorSlots(userId);
     return res.json(rows || []);
   } catch (err) {
@@ -131,7 +131,7 @@ exports.bookSlot = async (req, res) => {
   try {
     const slotId = req.params.id;
     const studentId = req.user?.sub;
-    
+
     if (!studentId) {
       return res.status(401).json({ error: 'unauthorized' });
     }
@@ -147,7 +147,7 @@ exports.bookSlot = async (req, res) => {
 
     // Update slot status to booked (simplified - in real app, track bookings)
     await db.updateTutorSlot(slotId, { status: 'booked' });
-    
+
     return res.json({ success: true, message: 'Slot booked successfully' });
   } catch (err) {
     console.error('bookSlot error', err);

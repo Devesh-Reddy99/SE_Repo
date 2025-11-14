@@ -36,9 +36,9 @@ describe('SearchSlots Component', () => {
   test('shows error when search term is empty', async () => {
     render(<SearchSlots />);
     const searchButton = screen.getByRole('button', { name: /search/i });
-    
+
     fireEvent.click(searchButton);
-    
+
     await waitFor(() => {
       expect(screen.getByText(/please enter a search term/i)).toBeInTheDocument();
     }, { timeout: 2000 });
@@ -57,17 +57,17 @@ describe('SearchSlots Component', () => {
         status: 'available'
       }
     ];
-    
+
     slotService.searchSlots.mockResolvedValueOnce(mockResults);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     const searchButton = screen.getByRole('button', { name: /search/i });
-    
+
     await userEvent.type(searchInput, 'Mathematics');
     fireEvent.click(searchButton);
-    
+
     await waitFor(() => {
       expect(slotService.searchSlots).toHaveBeenCalled();
       expect(screen.getByText('Mathematics')).toBeInTheDocument();
@@ -78,11 +78,11 @@ describe('SearchSlots Component', () => {
     slotService.searchSlots.mockResolvedValueOnce([]);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     await userEvent.type(searchInput, 'NonExistent');
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
-    
+
     await waitFor(() => {
       expect(screen.getByText(/no slots found/i)).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -105,17 +105,17 @@ describe('SearchSlots Component', () => {
     slotService.searchSlots.mockResolvedValueOnce(mockResults);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     await userEvent.type(searchInput, 'Math');
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
-    
+
     await waitFor(() => {
       expect(screen.getByText('Mathematics')).toBeInTheDocument();
     }, { timeout: 3000 });
-    
+
     fireEvent.click(screen.getByRole('button', { name: /clear filters/i }));
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Mathematics')).not.toBeInTheDocument();
     }, { timeout: 1000 });
@@ -138,11 +138,11 @@ describe('SearchSlots Component', () => {
     slotService.searchSlots.mockResolvedValueOnce(mockResults);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     await userEvent.type(searchInput, 'Math');
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
-    
+
     await waitFor(() => {
       expect(screen.getByText(/available/i)).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -150,7 +150,7 @@ describe('SearchSlots Component', () => {
 
   test('shows loading state during search', async () => {
     slotService.searchSlots.mockImplementationOnce(
-      () => new Promise(resolve => 
+      () => new Promise(resolve =>
         setTimeout(() => resolve([
           {
             id: 1,
@@ -167,11 +167,11 @@ describe('SearchSlots Component', () => {
     );
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     await userEvent.type(searchInput, 'Math');
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
-    
+
     await waitFor(() => {
       expect(screen.getByText('Mathematics')).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -209,13 +209,13 @@ describe('SearchSlots Component', () => {
       .mockResolvedValueOnce(mockResults2);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     const searchButton = screen.getByRole('button', { name: /search/i });
-    
+
     await userEvent.type(searchInput, 'Math');
     fireEvent.click(searchButton);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Mathematics')).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -223,7 +223,7 @@ describe('SearchSlots Component', () => {
     await userEvent.clear(searchInput);
     await userEvent.type(searchInput, 'Physics');
     fireEvent.click(searchButton);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Physics')).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -247,11 +247,11 @@ describe('SearchSlots Component', () => {
     slotService.searchSlots.mockResolvedValueOnce(mockResults);
 
     render(<SearchSlots />);
-    
+
     const searchInput = screen.getByPlaceholderText(/search by tutor name or subject/i);
     await userEvent.type(searchInput, 'Math');
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
-    
+
     await waitFor(() => {
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.getByText('Room 101')).toBeInTheDocument();

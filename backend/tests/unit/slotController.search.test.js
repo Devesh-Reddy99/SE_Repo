@@ -19,7 +19,7 @@ describe('Slot Controller Search Tests', () => {
   describe('searchSlots', () => {
     it('should return search results with valid parameters', async () => {
       req.query = { searchTerm: 'Mathematics', filterType: 'subject' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([
         {
           id: 1,
@@ -42,7 +42,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should return 404 when no results found', async () => {
       req.query = { searchTerm: 'NonExistent', filterType: 'subject' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([]);
 
       await slotController.searchSlots(req, res);
@@ -52,7 +52,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should handle search by date filter', async () => {
       req.query = { filterType: 'date', date: '2025-11-15' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([]);
 
       await slotController.searchSlots(req, res);
@@ -62,7 +62,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should handle search by tutor name', async () => {
       req.query = { searchTerm: 'John', filterType: 'name' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([
         {
           id: 1,
@@ -80,7 +80,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should handle server errors gracefully', async () => {
       req.query = { searchTerm: 'test', filterType: 'subject' };
-      
+
       jest.spyOn(db, 'searchSlots').mockRejectedValue(new Error('Database error'));
 
       await slotController.searchSlots(req, res);
@@ -91,7 +91,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should use default filter type when not provided', async () => {
       req.query = { searchTerm: 'test' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([]);
 
       await slotController.searchSlots(req, res);
@@ -101,7 +101,7 @@ describe('Slot Controller Search Tests', () => {
 
     it('should handle empty search term with all filter type', async () => {
       req.query = { searchTerm: '', filterType: 'all' };
-      
+
       jest.spyOn(db, 'searchSlots').mockResolvedValue([]);
 
       await slotController.searchSlots(req, res);

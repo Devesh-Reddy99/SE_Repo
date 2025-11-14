@@ -41,7 +41,6 @@ backend/dist/
 *.temp
 
 # Dependency lock files (optional)
-package-lock.json
 yarn.lock
 
 # Environment/Secrets backup

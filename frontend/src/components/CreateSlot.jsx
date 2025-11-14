@@ -13,10 +13,10 @@ export default function CreateSlot({ onLogout, onShowLogin, isAuthenticated }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!user || !isAuthenticated) { 
+    if (!user || !isAuthenticated) {
       setMsg('Please login first');
       if (onShowLogin) onShowLogin();
-      return; 
+      return;
     }
     setMsg('Creating slot...');
     try {
@@ -59,62 +59,62 @@ export default function CreateSlot({ onLogout, onShowLogin, isAuthenticated }) {
         <form className="slot-form" onSubmit={submit}>
           <div className="slot-input-group">
             <label>Subject</label>
-            <input 
+            <input
               className="slot-input"
-              value={subject} 
-              onChange={(e) => setSubject(e.target.value)} 
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               placeholder="e.g., Mathematics, Programming"
-              required 
+              required
             />
           </div>
           <div className="slot-input-group">
             <label>Start Time</label>
-            <input 
+            <input
               className="slot-input"
-              type="datetime-local" 
-              value={startTime} 
-              onChange={(e) => setStartTime(e.target.value)} 
-              required 
+              type="datetime-local"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              required
             />
           </div>
           <div className="slot-input-group">
             <label>End Time</label>
-            <input 
+            <input
               className="slot-input"
-              type="datetime-local" 
-              value={endTime} 
-              onChange={(e) => setEndTime(e.target.value)} 
-              required 
+              type="datetime-local"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              required
             />
           </div>
           <div className="slot-input-group">
             <label>Capacity</label>
-            <input 
+            <input
               className="slot-input"
-              type="number" 
-              min="1" 
-              value={capacity} 
-              onChange={(e) => setCapacity(e.target.value)} 
+              type="number"
+              min="1"
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
               placeholder="Number of students"
             />
           </div>
           <div className="slot-input-group">
             <label>Location</label>
-            <input 
+            <input
               className="slot-input"
-              value={location} 
-              onChange={(e) => setLocation(e.target.value)} 
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               placeholder="Room number or online meeting link"
             />
           </div>
           <div className="slot-input-group">
             <label>Description</label>
-            <textarea 
+            <textarea
               className="slot-input"
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)} 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              placeholder="Topics covered, prerequisites, etc." 
+              placeholder="Topics covered, prerequisites, etc."
             />
           </div>
           <div className="slot-button-group">

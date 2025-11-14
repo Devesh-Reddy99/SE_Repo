@@ -15,7 +15,7 @@ export default function SearchSlots() {
   // Handle search when any filter changes
   const handleSearch = async (e) => {
     e.preventDefault();
-    
+
     if (!searchTerm.trim() && filterType === 'all') {
       setError('Please enter a search term');
       return;
@@ -56,7 +56,7 @@ export default function SearchSlots() {
   return (
     <div className="search-slots-container">
       <h2>Search Tutoring Slots</h2>
-      
+
       <form className="search-form" onSubmit={handleSearch}>
         {/* Main Search Bar */}
         <div className="search-bar-section">
@@ -116,9 +116,9 @@ export default function SearchSlots() {
             </div>
           )}
 
-          <button 
-            type="button" 
-            onClick={handleClearFilters} 
+          <button
+            type="button"
+            onClick={handleClearFilters}
             className="clear-filters-button"
           >
             Clear Filters

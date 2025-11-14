@@ -24,11 +24,11 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
-        connectSrc: ["'self'", 'http://localhost:3000', 'http://localhost:4000'],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:']
+        defaultSrc: ['\'self\''],
+        connectSrc: ['\'self\'', 'http://localhost:3000', 'http://localhost:4000'],
+        scriptSrc: ['\'self\'', '\'unsafe-inline\''],
+        styleSrc: ['\'self\'', '\'unsafe-inline\''],
+        imgSrc: ['\'self\'', 'data:']
       }
     }
   })

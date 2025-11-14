@@ -1,9 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const bcrypt = require('bcrypt');
 
 // Use test database in test environment, otherwise use production database
-const dbPath = process.env.NODE_ENV === 'test' 
+const dbPath = process.env.NODE_ENV === 'test'
   ? path.join(__dirname, 'test.db')
   : path.join(__dirname, 'tutortribe.db');
 
@@ -172,7 +171,7 @@ function updateTutorSlot(id, updates) {
 function initializeIndexes() {
   return new Promise((resolve, reject) => {
     if (!db) return reject(new Error('Database not initialized'));
-    
+
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_slots_subject ON slots(subject)',
       'CREATE INDEX IF NOT EXISTS idx_slots_status ON slots(status)',
@@ -201,38 +200,38 @@ function initializeIndexes() {
 function searchSlots(searchTerm, filterType, filterValue) {
   return new Promise((resolve, reject) => {
     if (!db) return reject(new Error('Database not initialized'));
-    
+
     let sql = `SELECT s.id, s.tutor_id AS tutorId, u.username AS tutorName, s.subject, 
                       s.start_time AS startTime, s.end_time AS endTime, s.capacity, 
                       s.location, s.description, s.status
                FROM slots s
                LEFT JOIN users u ON s.tutor_id = u.id
                WHERE 1=1`;
-    
+
     const params = [];
 
     // Build WHERE clause based on filter type
     if (filterType === 'all' && searchTerm) {
       // Search across subject, location, and tutor name
-      sql += ` AND (s.subject LIKE ? OR s.location LIKE ? OR u.username LIKE ?)`;
+      sql += ' AND (s.subject LIKE ? OR s.location LIKE ? OR u.username LIKE ?)';
       const term = `%${searchTerm}%`;
       params.push(term, term, term);
     } else if (filterType === 'name' && searchTerm) {
       // Search by tutor name
-      sql += ` AND u.username LIKE ?`;
+      sql += ' AND u.username LIKE ?';
       params.push(`%${searchTerm}%`);
     } else if (filterType === 'subject' && searchTerm) {
       // Search by subject
-      sql += ` AND s.subject LIKE ?`;
+      sql += ' AND s.subject LIKE ?';
       params.push(`%${searchTerm}%`);
     } else if (filterType === 'date' && filterValue) {
       // Search by date (match start date)
-      sql += ` AND DATE(s.start_time) = ?`;
+      sql += ' AND DATE(s.start_time) = ?';
       params.push(filterValue);
     }
 
     // Order by start time ascending
-    sql += ` ORDER BY s.start_time ASC`;
+    sql += ' ORDER BY s.start_time ASC';
 
     db.all(sql, params, (err, rows) => {
       if (err) return reject(err);
@@ -244,7 +243,7 @@ function searchSlots(searchTerm, filterType, filterValue) {
 function getAvailableSlots() {
   return new Promise((resolve, reject) => {
     if (!db) return reject(new Error('Database not initialized'));
-    
+
     const sql = `SELECT s.id, s.tutor_id AS tutorId, u.username AS tutorName, s.subject, 
                         s.start_time AS startTime, s.end_time AS endTime, s.capacity, 
                         s.location, s.description, s.status
@@ -252,7 +251,7 @@ function getAvailableSlots() {
                  LEFT JOIN users u ON s.tutor_id = u.id
                  WHERE s.status = 'available'
                  ORDER BY s.start_time ASC`;
-    
+
     db.all(sql, [], (err, rows) => {
       if (err) return reject(err);
       resolve(rows || []);
@@ -260,11 +259,11 @@ function getAvailableSlots() {
   });
 }
 
-module.exports = { 
-  getUserByUsername, 
-  createTutorSlot, 
-  getTutorSlots, 
-  getSlotById, 
+module.exports = {
+  getUserByUsername,
+  createTutorSlot,
+  getTutorSlots,
+  getSlotById,
   updateTutorSlot,
   searchSlots,
   getAvailableSlots,
